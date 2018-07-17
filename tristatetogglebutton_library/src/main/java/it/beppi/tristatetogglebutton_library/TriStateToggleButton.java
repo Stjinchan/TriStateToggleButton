@@ -126,11 +126,6 @@ public class TriStateToggleButton extends View{
 	private int swipeSensitivityPixels = 200;
 	private int swipeX = 0;
 
-	/** 是否默认处于打开状态*/	// Whether it is on by default
-	// Beppi: changed the type of isDefaultOn from boolean to ToggleStatus
-	// Beppi: refactored the variable name from isDefaultOn to defaultStatus
-//	private boolean isDefaultOn = false;
-	private ToggleStatus defaultStatus = off;
 	// Beppi: enabled && disabledColor
 	private boolean enabled = true;
 	private int disabledColor = Color.parseColor("#bdbdbd");   // grey 400
@@ -222,7 +217,8 @@ public class TriStateToggleButton extends View{
 		defaultAnimate = typedArray.getBoolean(R.styleable.TriStateToggleButton_tbAnimate, defaultAnimate);
 		// Beppi: modified defaultStatus from boolean to DefaultStatus
 //		defaultStatus = typedArray.getBoolean(R.styleable.ToggleButton_tbDefaultStatus, defaultStatus);
-		defaultStatus = attrToStatus(typedArray.getString(R.styleable.TriStateToggleButton_tbDefaultStatus));
+		/* 是否默认处于打开状态*/
+		ToggleStatus defaultStatus = attrToStatus(typedArray.getString(R.styleable.TriStateToggleButton_tbDefaultStatus));
 		// Beppi: added tbIsMidSelectable
 		midSelectable = typedArray.getBoolean(R.styleable.TriStateToggleButton_tbIsMidSelectable, midSelectable);
 		// Beppi: added enabled
@@ -259,17 +255,16 @@ public class TriStateToggleButton extends View{
 
 	// Beppi: modified to iterate on the 3 values instead of switching between two
 	public void toggle(boolean animate) {
-//		toggleStatus = !toggleStatus;
 		if (midSelectable)
 			switch (toggleStatus) {
-				case off: putValueInToggleStatus(mid); break;
+				case off: putValueInToggleStatus(mToggleRightToLeft?on:mid); break;
 				case mid: putValueInToggleStatus(mToggleRightToLeft?off:on); break;
 				case on: putValueInToggleStatus(mToggleRightToLeft?mid:off); break;
 			}
 		else
 			switch (toggleStatus) {
-				case off:
-				case mid: putValueInToggleStatus(on); break;
+				case off: putValueInToggleStatus(on); break;
+				case mid: putValueInToggleStatus(mToggleRightToLeft?off:on); break;
 				case on: putValueInToggleStatus(off); break;
 			}
 		takeEffect(animate);
@@ -414,7 +409,7 @@ public class TriStateToggleButton extends View{
 */
 	private void takeEffect(boolean animate) {
 		if(animate){
-			spring.setEndValue(toggleStatus == on ? 1 : toggleStatus == off ? 0 : 0.5);
+			spring.setEndValue(toggleStatus == on ? 1 : toggleStatus == off ? 0.01 : 0.5);
 		}else{
 			//这里没有调用spring，所以spring里的当前值没有变更，这里要设置一下，同步两边的当前值
 			// There is no call spring, so the current value of the spring has not changed, here to set it, the current value on both sides of synchronization
@@ -510,40 +505,7 @@ public class TriStateToggleButton extends View{
 		canvas.drawRoundRect(rect, spotR, spotR, paint);
 		
 	}
-	
-	/**
-	 * @param value
-	 */
-	/*
-	private void calculateEffect(final double value) {
-		final float mapToggleX = (float) SpringUtil.mapValueFromRangeToRange(value, 0, 1, spotMinX, spotMaxX);
-		spotX = mapToggleX;
-		
-		float mapOffLineWidth = (float) SpringUtil.mapValueFromRangeToRange(1 - value, 0, 1, 10, spotSize);
-		
-		offLineWidth = mapOffLineWidth;
-		
-		final int fromB = Color.blue(onColor);
-		final int fromR = Color.red(onColor);
-		final int fromG = Color.green(onColor);
-		
-		final int toB = Color.blue(offBorderColor);
-		final int toR = Color.red(offBorderColor);
-		final int toG = Color.green(offBorderColor);
-		
-		int springB = (int) SpringUtil.mapValueFromRangeToRange(1 - value, 0, 1, fromB, toB);
-		int springR = (int) SpringUtil.mapValueFromRangeToRange(1 - value, 0, 1, fromR, toR);
-		int springG = (int) SpringUtil.mapValueFromRangeToRange(1 - value, 0, 1, fromG, toG);
-		
-		springB = clamp(springB, 0, 255);
-		springR = clamp(springR, 0, 255);
-		springG = clamp(springG, 0, 255);
-		
-		borderColor = Color.rgb(springR, springG, springB);
-		
-		postInvalidate();
-	}
-*/
+
 	private void calculateEffect(final double value) {
 		final float mapToggleX = (float) SpringUtil.mapValueFromRangeToRange(value, 0, 1, spotMinX, spotMaxX);
 		spotX = mapToggleX;
