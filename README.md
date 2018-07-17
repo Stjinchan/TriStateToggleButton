@@ -2,6 +2,10 @@
 A fully customizable and super-easy tri-state toggle button (switch button if you prefer) for Android, based on iOS look and feel.
 Can act with three independent states, or with two states like a standard checkbox, or with two states plus one undefined.
 
+### Update from original project
+* Add right to left toggle
+* Fix color issue when init state is off
+
 
 <img src="images/tstb1.gif"><br>
 <a href="http://android-arsenal.com/details/1/4692"><img src="https://img.shields.io/badge/Android%20Arsenal-TriStateToggleButton-brightgreen.svg?style=flat" border="0" alt="Android Arsenal"></a>
@@ -31,7 +35,7 @@ In your Application's or Module's build.gradle file:
 
     dependencies {
         ...
-        compile 'com.github.BeppiMenozzi:TriStateToggleButton:1.1.4'
+        compile 'com.github.mhopmann:TriStateToggleButton:1.1.6'
         ...
     }
     
