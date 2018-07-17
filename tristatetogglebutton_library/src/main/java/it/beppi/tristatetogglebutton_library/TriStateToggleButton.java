@@ -67,6 +67,7 @@ public class TriStateToggleButton extends View{
 	}
 
 
+
 	private SpringSystem springSystem;
 	private Spring spring ;
 	/** */
@@ -248,14 +249,22 @@ public class TriStateToggleButton extends View{
 		toggle(true);
 	}
 
+	private boolean mToggleRightToLeft = false;
+	/**
+	 * Go from middle to the left
+	 */
+	public void setToggleRightToLeft(boolean toggleRightToLeft) {
+		mToggleRightToLeft = toggleRightToLeft;
+	}
+
 	// Beppi: modified to iterate on the 3 values instead of switching between two
 	public void toggle(boolean animate) {
 //		toggleStatus = !toggleStatus;
 		if (midSelectable)
 			switch (toggleStatus) {
 				case off: putValueInToggleStatus(mid); break;
-				case mid: putValueInToggleStatus(on); break;
-				case on: putValueInToggleStatus(off); break;
+				case mid: putValueInToggleStatus(mToggleRightToLeft?off:on); break;
+				case on: putValueInToggleStatus(mToggleRightToLeft?mid:off); break;
 			}
 		else
 			switch (toggleStatus) {
